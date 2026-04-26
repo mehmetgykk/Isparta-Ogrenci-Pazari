@@ -1,0 +1,789 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Isparta Öğrenci Pazarı | Dashboard</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 30px;
+            border: none;
+        }
+
+        .ads-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ad-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            gap: 15px;
+        }
+
+            .ad-card:hover {
+                border-color: var(--primary);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                transform: translateX(5px);
+            }
+
+        .ad-image-container {
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+        }
+
+            .ad-image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .ad-card-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ad-info {
+            flex: 1;
+        }
+
+        .ad-card h4 {
+            margin: 0 0 2px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .ad-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ad-meta {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .ad-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            min-width: 120px;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--primary-dark);
+            }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fee2e2;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-msg {
+            background: #6366f1;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            margin: 25px 0 15px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Mesaj Balonları ve Liste Tasarımı */
+        .message-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 8px;
+        }
+
+        .msg-received {
+            align-self: flex-start;
+            background: white;
+            border-bottom-left-radius: 2px;
+        }
+
+        .msg-sent {
+            align-self: flex-end;
+            background: #e0e7ff;
+            border-bottom-right-radius: 2px;
+            border-color: #c7d2fe;
+        }
+
+        .chat-contact-item {
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+            .chat-contact-item:hover {
+                border-color: var(--primary);
+                background: white;
+            }
+
+        #chatFlow {
+            height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .unread-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 15px;
+            text-align: center;
+        }
+        .reply-preview {
+            background: rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+            padding: 5px 8px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            border-radius: 4px;
+            color: #475569;
+        }
+
+        .msg-sent .reply-preview {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-left-color: #c7d2fe;
+        }
+        /* !important kısmını SİLDİK, sadece normal kapalı başlasın */
+        #messageModal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <main>
+            <div class="card welcome-card">
+                <div>
+                    <h1 style="margin: 0;">Selam, <span id="userDisplay"></span>! 👋</h1>
+                    <p style="opacity: 0.9; margin: 10px 0 0 0;">Isparta'nın en teknolojik pazarındasın.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div id="userCount" style="font-size: 2.5rem; font-weight: 800;">0</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Kayıtlı Üye</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top:0;">📢 İlan Yayınla</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" id="adTitle" placeholder="Ürün Adı">
+                    <input type="number" id="adPrice" placeholder="Fiyat (TL)">
+                </div>
+                <select id="adCategory">
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Kitap">Kitap / Not</option>
+                    <option value="Eşya">Eşya</option>
+                    <option value="Diğer">Diğer</option>
+                </select>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 12px; color: #64748b; display: block; margin-bottom: 5px;">🖼️ Ürün Fotoğrafı:</label>
+                    <input type="file" id="adImageFile" accept="image/*" style="border: 1px dashed #6366f1; padding: 10px; border-radius: 8px; width: 100%; cursor: pointer;">
+                </div>
+                <textarea id="adDescription" placeholder="Ürün açıklaması..."></textarea>
+                <button class="btn-primary" style="width: 100%;" onclick="postAd()">İlanı Paylaş ✅</button>
+            </div>
+
+            <h3 class="section-title">🌐 Pazardaki İlanlar <span class="badge" id="totalAdCount">0</span></h3>
+            <div class="card" style="display: flex; gap: 15px; background: #fff; padding: 15px; margin-bottom: 20px;">
+                <input type="text" id="searchInput" onkeyup="filterAds()" placeholder="🔍 Ürün ismi veya açıklama ara..." style="margin-bottom: 0; flex: 3;">
+                <select id="filterCategory" onchange="filterAds()" style="margin-bottom: 0; flex: 1;">
+                    <option value="Hepsi">Tüm Kategoriler</option>
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Kitap">Kitap / Not</option>
+                    <option value="Eşya">Eşya</option>
+                    <option value="Diğer">Diğer</option>
+                </select>
+            </div>
+            <div id="adsContainer" class="ads-grid"></div>
+            <div id="noResults" style="display: none; text-align: center; padding: 40px; background: white; border-radius: 15px; border: 2px dashed #cbd5e1; margin-top: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🧐</div>
+                <h3 style="color: #64748b; margin: 0;">Aradığın ürünü bulamadık!</h3>
+            </div>
+        </main>
+
+        <aside>
+            <div id="adminPanel" style="display: none;" class="card">
+                <h3 style="color: var(--danger); margin-top: 0; font-size: 1rem; border-bottom: 1px solid #fee2e2; padding-bottom: 10px; margin-bottom: 15px;">🛡️ Yönetici Modu</h3>
+                <button onclick="location.reload()" class="btn-primary" style="background: #1e293b; width: 100%;">🔄 Sistemi Tazele</button>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top: 0; font-size: 1.1rem; margin-bottom: 15px;">🔐 Hesap Ayarları</h3>
+                <input type="password" id="currentPassword" placeholder="Mevcut Şifre">
+                <input type="password" id="newPassword" placeholder="Yeni Şifre">
+                <input type="password" id="confirmNewPassword" placeholder="Yeni Şifre (Tekrar)">
+                <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="updatePassword()">Şifreyi Güncelle</button>
+                <button class="btn-logout" style="width: 100%;" onclick="logout()">Çıkış Yap</button>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                    <span>📦 Senin İlanların</span>
+                    <span id="myAdCount" class="badge" style="background: var(--primary); color: white;">0</span>
+                </h3>
+                <div id="myAdsContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;">
+                    <p style="font-size: 12px; color: #94a3b8; text-align: center;">Yükleniyor...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                    <span>📩 Mesaj Kutusu</span>
+                    <span id="msgCount" class="badge" style="background: var(--danger); color: white;">0</span>
+                </h3>
+                <div id="inboxContainer" style="max-height: 400px; overflow-y: auto;">
+                    <p style="font-size: 12px; color: #94a3b8; text-align: center;">Henüz mesaj yok.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="messageModal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+        <div class="card" style="max-width: 450px; margin: 50px auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+            <h3 id="msgTargetTitle" style="margin-top: 0; font-size: 1.1rem; color: var(--primary);"></h3>
+
+            <div id="chatFlow"></div>
+
+            <div id="replyPreviewArea"></div>
+
+            <textarea id="msgContent" placeholder="Cevabını yaz kanka..." style="height: 80px; resize: none; margin-bottom: 10px;"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="sendMessage()" style="flex: 2;">Gönder ✉️</button>
+                <button style="background: #e2e8f0; color: #475569; flex: 1;" onclick="document.getElementById('messageModal').style.display='none'">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+        <div class="card" style="max-width: 500px; margin: 50px auto; position: relative;">
+            <h3 style="margin-top: 0;">✏️ İlanı Güncelle</h3>
+            <input type="hidden" id="editAdId">
+            <label style="font-size: 12px; color: var(--text-muted);">Ürün Adı</label>
+            <input type="text" id="editAdTitle">
+            <label style="font-size: 12px; color: var(--text-muted);">Fiyat (TL)</label>
+            <input type="number" id="editAdPrice">
+            <label style="font-size: 12px; color: var(--text-muted);">Fotoğrafı Değiştir</label>
+            <input type="file" id="editAdImageFile" accept="image/*">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-primary" onclick="saveAdUpdate()" style="flex: 1;">Kaydet</button>
+                <button style="background: #e2e8f0; color: #475569; flex: 1;" onclick="closeEditModal()">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const currentUser = localStorage.getItem('username');
+        const adminUser = 'mehmetgeyik';
+        const apiBaseUrl = 'https://localhost:7186';
+        let currentReceiver = "";
+        let currentAdTitle = "";
+        let allMessages = [];
+        let selectedParentId = null; // Yanıtlanan mesajın ID'si kanka
+
+        if (!currentUser) window.location.href = 'index.html';
+        document.getElementById('userDisplay').innerText = currentUser;
+
+        window.onload = function () {
+            fetchUsers();
+            loadAds(); // loadAds zaten içinde loadInbox()'ı çağırıyor
+            if (currentUser === adminUser) document.getElementById('adminPanel').style.display = 'block';
+
+            // Periyodik güncelleme sadece listeyi yenilesin, modalı değil
+            setInterval(loadInbox, 10000);
+        };
+
+        async function fetchUsers() {
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/auth/users`);
+                const users = await res.json();
+                document.getElementById('userCount').innerText = users.length;
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadAds() {
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/ads/all`);
+                const ads = await res.json();
+                const container = document.getElementById('adsContainer');
+                const myContainer = document.getElementById('myAdsContainer');
+                const myAdCountElement = document.getElementById('myAdCount');
+
+                container.innerHTML = '';
+                myContainer.innerHTML = '';
+                document.getElementById('totalAdCount').innerText = ads.length;
+                let myAdCounter = 0;
+
+                ads.forEach(ad => {
+                    const isOwner = (currentUser === ad.createdBy);
+                    const isAdmin = (currentUser === adminUser);
+                    const isAdFromAdmin = (ad.createdBy === adminUser);
+                    const imageUrl = ad.imageUrl ? `${apiBaseUrl}${ad.imageUrl}` : 'https://via.placeholder.com/80?text=Yok';
+
+                    const adHtml = `
+                <div class="ad-card" style="${isAdFromAdmin ? 'border: 2px solid #f59e0b; background: #fffdf5;' : ''}">
+                    <div class="ad-image-container"><img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/80?text=Hata'"></div>
+                    <div class="ad-card-content">
+                        <div class="ad-info">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <h4>${ad.title} ${isAdFromAdmin ? '✅' : ''}</h4>
+                                <span class="badge">${ad.category}</span>
+                            </div>
+                            <p>${ad.description}</p>
+                            <div class="ad-meta">👤 Satıcı: ${ad.createdBy}</div>
+                        </div>
+                        <div class="ad-actions">
+                            <span class="price-tag">${ad.price} TL</span>
+                            <div style="display:flex; gap:5px;">
+                                ${!isOwner ? `<button class="btn-msg" onclick="openMessageModal('${ad.createdBy}', '${ad.title}')">💬 Soru Sor</button>` : ''}
+                                ${isOwner ? `<button class="btn-edit" onclick="editAd(${ad.id}, '${ad.title}', ${ad.price})">✏️</button>` : ''}
+                                ${isAdmin ? `<button class="btn-delete" onclick="deleteAd(${ad.id})">🗑️</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                    container.innerHTML += adHtml;
+
+                    if (isOwner) {
+                        myAdCounter++;
+                        myContainer.innerHTML += `
+                    <div class="ad-card" style="padding: 8px; border: 1px solid #e2e8f0; height: auto;">
+                        <img src="${imageUrl}" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;">
+                        <div style="flex:1;">
+                            <h5 style="margin:0;">${ad.title}</h5>
+                            <div style="color:var(--success); font-size:11px;">${ad.price} TL</div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn-edit" onclick="editAd(${ad.id}, '${ad.title}', ${ad.price})">✏️</button>
+                            <button class="btn-delete" onclick="deleteAd(${ad.id})">🗑️</button>
+                        </div>
+                    </div>`;
+                    }
+                });
+                myAdCountElement.innerText = myAdCounter;
+                loadInbox(); // Mesajları çek
+            } catch (e) { console.error(e); }
+        }
+        async function loadInbox() {
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/messages/chat/${currentUser}`);
+                if (res.ok) {
+                    allMessages = await res.json();
+                    // Listeyi ekrana basan fonksiyonu çağır
+                    renderChatList();
+                }
+            } catch (e) {
+                console.error("Gelen kutusu yüklenirken hata:", e);
+            }
+        }
+        function renderChatList() {
+            const container = document.getElementById('inboxContainer');
+            const badge = document.getElementById('msgCount');
+
+            // Mesajlaştığın kişileri benzersiz bir liste yap
+            const contacts = [...new Set(allMessages.map(m =>
+                m.senderUsername === currentUser ? m.receiverUsername : m.senderUsername
+            ))];
+
+            // Toplam okunmamış sayısı
+            const totalUnread = allMessages.filter(m => m.receiverUsername === currentUser && !m.isRead).length;
+            badge.innerText = totalUnread;
+            badge.style.display = totalUnread > 0 ? 'inline' : 'none';
+
+            container.innerHTML = contacts.length ? '' : '<p style="text-align:center; font-size:11px; color:gray;">Mesaj yok.</p>';
+
+            contacts.forEach(user => {
+                const lastMsg = allMessages.find(m => m.senderUsername === user || m.receiverUsername === user);
+                const unreadCount = allMessages.filter(m => m.senderUsername === user && m.receiverUsername === currentUser && !m.isRead).length;
+
+                const displayTag = lastMsg.adTitle.replace("RE: ", "");
+                const tagHtml = (displayTag && displayTag !== "Sohbet")
+                    ? `<span style="font-size:9px; color:var(--primary); font-weight:bold;">[${displayTag.substring(0, 10)}...]</span>`
+                    : '';
+
+                // Tıklama olayını garantilemek için elementi oluşturup atıyoruz
+                const contactDiv = document.createElement('div');
+                contactDiv.className = 'chat-contact-item';
+                contactDiv.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer; border-bottom:1px solid #f1f5f9;";
+
+                // Tıklayınca ilgili kişiyi aç
+                const targetUser = user;
+                contactDiv.onclick = function () { openDirectChat(targetUser); };
+
+                contactDiv.innerHTML = `
+            <div style="min-width:0; flex:1;">
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <span style="font-weight:700; font-size:13px; color:var(--text-main);">👤 ${targetUser}</span>
+                    ${tagHtml}
+                </div>
+                <div style="font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    ${lastMsg.content}
+                </div>
+            </div>
+            ${unreadCount > 0 ? `
+                <div class="unread-badge" style="background:var(--danger); color:white; font-size:10px; padding:2px 6px; border-radius:10px; font-weight:bold; min-width:18px; text-align:center;">
+                    ${unreadCount}
+                </div>` : ''}
+        `;
+                container.appendChild(contactDiv);
+            });
+        }
+        
+        
+
+        // YANITLAMA FONKSİYONLARI
+        function setReply(id, content, sender) {
+            selectedParentId = id;
+            const modalBody = document.querySelector('#messageModal .card');
+            let preview = document.getElementById('replyPreviewArea');
+
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.id = 'replyPreviewArea';
+                modalBody.insertBefore(preview, document.getElementById('msgContent'));
+            }
+
+            preview.innerHTML = `
+                <div style="background:#f1f5f9; padding:8px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-size:11px; color:#475569;">↩️ <b>${sender}:</b> ${content.substring(0, 40)}...</div>
+                    <button onclick="cancelReply()" style="background:none; color:red; font-weight:bold; padding:0; font-size:14px; cursor:pointer;">×</button>
+                </div>`;
+        }
+
+        function cancelReply() {
+            selectedParentId = null;
+            const preview = document.getElementById('replyPreviewArea');
+            if (preview) preview.innerHTML = '';
+        }
+
+        async function openDirectChat(otherUser) {
+            if (!otherUser || otherUser === "" || otherUser === "null") return;
+
+            currentReceiver = otherUser;
+            cancelReply();
+
+            // Konuyu güncelle
+            const lastMsg = allMessages.find(m => m.senderUsername === otherUser || m.receiverUsername === otherUser);
+            if (lastMsg) { currentAdTitle = lastMsg.adTitle; }
+
+            try { await fetch(`${apiBaseUrl}/api/messages/markAsRead/${currentUser}/${otherUser}`, { method: 'POST' }); } catch (e) { }
+
+            allMessages.filter(m => m.senderUsername === otherUser && m.receiverUsername === currentUser).forEach(m => m.isRead = true);
+
+            const chatHistory = allMessages.filter(m => m.senderUsername === otherUser || m.receiverUsername === otherUser).slice().reverse();
+            document.getElementById('msgTargetTitle').innerText = `👤 ${otherUser}`;
+            const flow = document.getElementById('chatFlow');
+            flow.innerHTML = '';
+
+            chatHistory.forEach(m => {
+                const isMe = m.senderUsername === currentUser;
+                const cleanAdTitle = m.adTitle ? m.adTitle.replace("RE: ", "") : "";
+                const shouldShowTag = cleanAdTitle !== "Sohbet" && cleanAdTitle !== "" && cleanAdTitle !== "null";
+                const parentMsg = allMessages.find(p => p.id === m.parentMessageId);
+                const safeContent = m.content.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                flow.innerHTML += `
+            <div class="message-bubble ${isMe ? 'msg-sent' : 'msg-received'}" style="${isMe ? 'align-self: flex-end;' : 'align-self: flex-start;'} position: relative; min-width: 120px; margin-bottom: 10px;">
+                ${parentMsg ? `<div class="reply-preview"><b>${parentMsg.senderUsername}:</b> ${parentMsg.content.substring(0, 30)}...</div>` : ''}
+                ${shouldShowTag ? `<div style="font-size: 9px; margin-bottom: 5px; font-weight: 800; display: flex; align-items: center; gap: 4px; opacity: 0.8;"><span style="background: ${isMe ? 'rgba(255,255,255,0.2)' : '#e0e7ff'}; color: ${isMe ? 'white' : '#4338ca'}; padding: 1px 6px; border-radius: 10px;">📦 ${cleanAdTitle}</span></div>` : ''}
+                <div style="font-size: 13px;">${m.content}</div>
+                <div style="display:flex; justify-content: space-between; align-items:center; margin-top:6px;">
+                    <span style="font-size:8px; opacity:0.6;">${new Date(m.sentAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
+                    ${!isMe ? `<button onclick="setReply(${m.id}, '${safeContent}', '${m.senderUsername}')" style="background:none; color:var(--primary); font-size:10px; cursor:pointer; font-weight:bold; padding: 0 4px;">↩️ Yanıtla</button>` : '<span></span>'}
+                </div>
+            </div>`;
+            });
+
+            document.getElementById('messageModal').style.display = 'block';
+            flow.scrollTop = flow.scrollHeight;
+            renderChatList();
+        }
+        
+
+        async function sendMessage() {
+            console.log("Gönderilen alıcı:", currentReceiver);
+            const contentInput = document.getElementById('msgContent');
+            const content = contentInput.value.trim();
+
+            if (!content) return;
+
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/messages/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        SenderUsername: currentUser,
+                        ReceiverUsername: currentReceiver,
+                        AdTitle: currentAdTitle,
+                        Content: content,
+                        ParentMessageId: selectedParentId
+                    })
+                });
+
+                if (res.ok) {
+                    contentInput.value = ''; // Kutuyu temizle
+                    cancelReply(); // Yanıt önizlemesini kapat
+
+                    // Veriyi tazele ama sayfayı komple render etmeden önce bekle
+                    await loadInbox();
+
+                    // Aktif sohbeti güncelle (Modal zaten açık olduğu için sadece içini dolduracak)
+                    openDirectChat(currentReceiver);
+
+                    // Konu bir ilan ise ve mesaj gittiyse, bir sonraki mesajın genel sohbete 
+                    // dönmesi için başlığı "Sohbet"e çekebilirsin (Opsiyonel)
+                    // currentAdTitle = "Sohbet"; 
+
+                } else {
+                    alert("Mesaj gitmedi kanka, backend'i bir kontrol et.");
+                }
+            } catch (e) {
+                console.error("Bağlantı hatası:", e);
+                alert("API bağlantısı koptu kanka!");
+            }
+        }
+        
+
+        function openMessageModal(receiver, adTitle) {
+            currentReceiver = receiver;
+            currentAdTitle = adTitle;
+            cancelReply(); // Eski yanıtları temizle
+
+            document.getElementById('msgTargetTitle').innerText = `${receiver} -> ${adTitle}`;
+            document.getElementById('chatFlow').innerHTML = '<p style="font-size:12px; text-align:center; color:gray; padding:20px;">Yeni bir soru soruyorsun kanka...</p>';
+
+            // Modalı aç
+            document.getElementById('messageModal').style.setProperty('display', 'block', 'important');
+            // Veya sadece: document.getElementById('messageModal').style.display = 'block';
+        }
+
+        async function postAd() {
+            const formData = new FormData();
+            formData.append("title", document.getElementById('adTitle').value);
+            formData.append("price", document.getElementById('adPrice').value);
+            formData.append("description", document.getElementById('adDescription').value);
+            formData.append("category", document.getElementById('adCategory').value);
+            formData.append("createdBy", currentUser);
+            formData.append("userId", 1);
+            const file = document.getElementById('adImageFile').files[0];
+            if (file) formData.append("image", file);
+
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/ads/post`, { method: 'POST', body: formData });
+                if (res.ok) { alert("Yayında! 📸"); location.reload(); }
+            } catch (e) { alert("Hata!"); }
+        }
+
+        async function deleteAd(id) {
+            if (confirm("Silinsin mi?")) {
+                await fetch(`${apiBaseUrl}/api/ads/delete/${id}`, { method: 'DELETE' });
+                loadAds();
+            }
+        }
+
+        function editAd(id, title, price) {
+            document.getElementById('editAdId').value = id;
+            document.getElementById('editAdTitle').value = title;
+            document.getElementById('editAdPrice').value = price;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        async function saveAdUpdate() {
+            const id = document.getElementById('editAdId').value;
+            const formData = new FormData();
+            formData.append("title", document.getElementById('editAdTitle').value);
+            formData.append("price", document.getElementById('editAdPrice').value);
+            formData.append("createdBy", currentUser);
+            const file = document.getElementById('editAdImageFile').files[0];
+            if (file) formData.append("image", file);
+
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/ads/update/${id}`, { method: 'PUT', body: formData });
+                if (res.ok) { alert("Güncellendi!✨"); closeEditModal(); loadAds(); }
+            } catch (e) { alert("Hata!"); }
+        }
+
+        async function updatePassword() {
+            const cp = document.getElementById('currentPassword').value;
+            const np = document.getElementById('newPassword').value;
+            const cnp = document.getElementById('confirmNewPassword').value;
+            if (np !== cnp) return alert("Şifreler tutmuyor!");
+            const res = await fetch(`${apiBaseUrl}/api/auth/update-password`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser, currentPassword: cp, newPassword: np })
+            });
+            if (res.ok) { alert("Şifre değişti!"); logout(); }
+        }
+
+        function filterAds() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const cat = document.getElementById('filterCategory').value;
+            const cards = document.querySelectorAll('#adsContainer .ad-card');
+            let found = 0;
+            cards.forEach(c => {
+                const text = c.innerText.toLowerCase();
+                const category = c.querySelector('.badge').innerText;
+                const match = text.includes(search) && (cat === "Hepsi" || category === cat);
+                c.style.display = match ? "flex" : "none";
+                if (match) found++;
+            });
+            document.getElementById('noResults').style.display = found === 0 ? "block" : "none";
+        }
+
+        function logout() { localStorage.removeItem('username'); window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>
