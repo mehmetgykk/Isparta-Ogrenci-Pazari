@@ -15,7 +15,13 @@ This project is a web-based marketplace application designed for local commerce 
 - **Database:** Microsoft SQL Server (SSMS)
 
 ## 📸 Screenshots
-[Görseli Görmek İçin Tıkla](https://hizliresim.com/sgfw7h6)
+Görselleri Görmek İçin Tıkla
+[Giriş Ekranı](https://hizliresim.com/k5jnpdp)
+[Yönetici Paneli](https://hizliresim.com/sgfw7h6)
+[İlan Listesi](https://hizliresim.com/la7v5an)
+[Hesap Ayarları](https://hizliresim.com/19ruv6v)
+[Gelen Kutusu](https://hizliresim.com/i1dwuzz)
+[Chat](https://hizliresim.com/jqz68cq)
 
 ## 🚀 How to Run
 1. Clone the repository: `git clone https://github.com/mehmetgykk/Isparta-Pazar-Marketplace.git`
