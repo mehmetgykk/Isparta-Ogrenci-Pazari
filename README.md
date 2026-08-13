@@ -24,6 +24,6 @@ Görselleri Görmek İçin Tıkla
 [Chat](https://hizliresim.com/glkbjdty)
 
 ## 🚀 How to Run
-1. Clone the repository: `git clone https://github.com/mehmetgykk/Isparta-Pazar-Marketplace.git`
+1. Clone the repository: `git clone https://github.com/mehmetgykk/Isparta-Ogrenci-Pazari`
 2. Set up the database using the provided SQL scripts.
 3. Run the application via Visual Studio or your preferred IDE.
