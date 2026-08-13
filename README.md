@@ -10,7 +10,7 @@ This project is a web-based marketplace application designed for local commerce 
 - **User Interface:** Clean and user-friendly design for browsing local products.
 
 ## 🛠 Tech Stack
-- **Backend:** C# / .NET (veya hangi dili kullandıysan)
+- **Backend:** C# / .NET 
 - **Frontend:** HTML, CSS, JavaScript (Dashboard UI enhancements)
 - **Database:** Microsoft SQL Server (SSMS)
 
