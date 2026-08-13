@@ -16,12 +16,12 @@ This project is a web-based marketplace application designed for local commerce 
 
 ## 📸 Screenshots
 Görselleri Görmek İçin Tıkla
-[Giriş Ekranı](https://hizliresim.com/k5jnpdp)
-[Yönetici Paneli](https://hizliresim.com/sgfw7h6)
-[İlan Listesi](https://hizliresim.com/la7v5an)
-[Hesap Ayarları](https://hizliresim.com/19ruv6v)
-[Gelen Kutusu](https://hizliresim.com/i1dwuzz)
-[Chat](https://hizliresim.com/jqz68cq)
+[Giriş Ekranı](https://hizliresim.com/sauhdphi)
+[Yönetici Paneli](https://hizliresim.com/v6do1ivl)
+[İlan Listesi](https://hizliresim.com/uccdybzu)
+[Hesap Ayarları](https://hizliresim.com/zpsg3eti)
+[Gelen Kutusu](https://hizliresim.com/mdhka1kl)
+[Chat](https://hizliresim.com/glkbjdty)
 
 ## 🚀 How to Run
 1. Clone the repository: `git clone https://github.com/mehmetgykk/Isparta-Pazar-Marketplace.git`
